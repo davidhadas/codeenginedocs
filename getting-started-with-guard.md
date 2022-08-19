@@ -20,7 +20,7 @@ completion-time: 5m
 {: toc-content-type="tutorial"}
 {: toc-completion-time="5m"}
 
-[Guard](http://knative.dev/security-guard){: external} is a runtime-security solution that will be offered as an option in later versions of Knative. Guard uses a per-application auto-learned set of micro rules to control the application ingress. As a result, Guard  helps identifiy application anomalities and supports Situational Awareness. Guard can also be used to block anomalous ingress. 
+[Guard](http://knative.dev/security-guard){: external} is a runtime-security solution that will be offered as an option in later versions of Knative. Guard uses a per-application auto-learned set of micro-rules to govern the application incoming requests and outgoing responses. As a result, Guard  helps identifiy application anomalies and supports Situational Awareness. Guard can also be used to block requests or responses not in line with expected patterns. 
 {: shortdesc}
 
 In this tutorial we deploy a new helloworld application and protect it with Guard. The steps to protect your own applications are similar.
@@ -46,7 +46,7 @@ Steps
 {: #guard-learner}
 {: step}
 
-Guard-Learner is service that auto-learns the necessery micro-rules for each Guard protected application in a project. It is helpful to streamline the deployment of new applications that seek Guard protection.   
+Guard-Learner is service that auto-learns the necessery micro-rules for each Guard-protected application in a project. It is helpful to streamline the deployment of new applications that seek Guard protection.   
 
 - Deploying a Guard-Learner application
 
@@ -106,11 +106,11 @@ Notes:
 {: #guard-get-parameters}
 {: step}
 
-- Extract information about the service and guard-leaner
+- Extract information about your deployed application and about the project's Guard-Leaner
 
 ```txt
 export NAMESPACE=`ibmcloud ce project current -o json|jq -r .kube_config_context`
-export LEARNER_URL=`ibmcloud ce application get -n guard-learner -o url`
+export GUARD_URL=`ibmcloud ce application get -n guard-learner -o url`
 export SERVICE_URL=`ibmcloud ce application get -n ${SERVICE_NAME} -o url`
 
 echo "The protected service name '${SERVICE_NAME}' namespace '${NAMESPACE}' url '${SERVICE_URL}'"
@@ -188,12 +188,12 @@ Example output
     {: screen}
 
 
-Security Alerts appear as warnings in the log file and start with the string "SECURITY ALERT!". The default setup of Guard is to never block any request and auto-learn any changes in the ingress. It typically takes about 30 min for Guard to learn the charactaristics of the incoming requests and build coresponding micro-rules. After the initial learning period, Guard alerts only when a change in behaviour is detedted. 
+Security Alerts appear as warnings in the log file and start with the string "SECURITY ALERT!". The default setup of Guard is to never block any request/response and auto-learn any new pattern after reporting it. When the application is actively serving requests, it typically takes about 30 min for Guard to learn the patterns of the application requests/responses and build coresponding micro-rules. After the initial learning period, Guard alerts only when a change in behavior is detected. 
 
-Note that in the default setup, Guard continues to learn any new behavior and will therefore avoid reporting when the new behavior repeats.
-Correct security procedures should incldue reviewing any new behavior detected by Guard. 
+Note that in the default setup, Guard continues to learn any new behavior and therefore avoid reporting repeatedly when the new behavior reoccurs.
+Correct security procedures should include reviewing any new behavior detected by Guard. 
 
-Guard can also be configrued to operate in other important modes of operation such as:
+Guard can also be configured to operate in other important modes of operation such as:
 
 - Move from auto-learning to manual micro-rules management after the initial learning period
 - Block requests/responses when they do not conform to the micro-rules 
@@ -204,7 +204,7 @@ Contact us in the [#code-engine channel](https://ibm-cloud-success.slack.com){: 
 {: #guard-cleanup}
 {: step}
 
-You can clean up your local system by removing the helloeworld application, the helloeworld Guard and the Guard-Learner if you no longer need it.
+When not using this tutorial applications, you can clean up your local system by removing the helloeworld application, the helloeworld Guard and the Guard-Learner as shown below.
 
 ```txt
 ibmcloud ce application delete -n ${SERVICE_NAME}
