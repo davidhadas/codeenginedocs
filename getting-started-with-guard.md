@@ -4,7 +4,7 @@ copyright:
   years: 2022
 lastupdated: "2022-08-02"
 
-keywords: security, zero trust, runtime security, workload security, workload security, serverless security, Gaurd, code engine application security, code engine service
+keywords: security, zero trust, runtime security, workload security, workload security, serverless security, Gaurd, code engine application security, code engine Service
 
 subcollection: codeengine
 
@@ -15,15 +15,15 @@ completion-time: 5m
 
 {{site.data.keyword.attribute-definition-list}}
 
-# Securing your workload with Guard
+# Securing your application with Guard
 {: #runtimesecuritytut}
 {: toc-content-type="tutorial"}
 {: toc-completion-time="5m"}
 
-[Guard](https://github.com/IBM/workload-security-guard/){: external} is an open source, workload runtime security solution, well equipped to protect serverless services.
+[Guard](http://knative.dev/security-guard){: external} is a runtime-security solution that will be offered as an option in later versions of Knative. Guard uses a per-application auto-learned set of micro rules to control the application ingress. As a result, Guard  helps identifiy application anomalities and supports Situational Awareness. Guard can also be used to block anomalous ingress. 
 {: shortdesc}
 
-In this tutorial we will protect a sample service that we will deploy on code engine. The steps to protect your own services are similar.
+In this tutorial we deploy a new helloworld application and protect it with Guard. The steps to protect your own applications are similar.
 
 Before you begin:
 
@@ -36,16 +36,20 @@ All {{site.data.keyword.codeengineshort}} users are required to have a Pay-as-yo
 Steps
 
 
-1. Deploy ***guard-learner*** (this needs to be repeated on every project where guard is used)
-2. Deploy one or more applications
+1. Deploying a Guard-Learner application as a per-project Service
+2. Creating and deploying a protected unexposed helloeworld application
+3. Finding the namespace and service URLs 
+4. Exposing the helloeworld application to the internet via Guard
+5. Managing the security of the helloeworld application and gaining Situational Awareness
+6. Removing this tutorial applications
 
-## Deploy guard-learner
+## Deploy a guard-learner application as a per-project service
 {: #guard-learner}
 {: step}
 
-Guard-learner is service that auto learns guard security micro-rules. It is helpful to streamline the security of code engine serverless services.  
+Guard-Learner is service that auto-learns the necessery micro-rules for each Guard protected application in a project. It is helpful to streamline the deployment of new applications that seek Guard protection.   
 
-- Create a guard-learner code-engine service
+- Deploying a Guard-Learner application
 
     ```txt
     ibmcloud ce application create -n guard-learner -v project --min 1 --max 1 -p 8888 -i ghcr.io/ibm/workload-security-guard/guard-learner
@@ -59,21 +63,22 @@ Guard-learner is service that auto learns guard security micro-rules. It is help
     [...]
     Run 'ibmcloud ce application get -n guard-learner' to check the application status.
     OK
-    [https://guard-learner.p8rrxs4rezl.us-south.codeengine.appdomain.cloud](http://guard-learner.p8rrxs4rezl.svc.cluster.local)
+
+    http://guard-learner.p8rrxs4rezl.svc.cluster.local
     ```
     {: screen}
     
 Notes:
-* Ensure to protect your service and not expose it to potential offenders by using project level visibility using `-v project`
-* Scale the guard-learner service to continuesly run a single instance using  `--min 1 --max 1`
-* You need to create the guard-learner service only once per code-engine project.
+* Ensure to protect your application and avoid exposing it to potential offenders by setting project level visibility using `-v project`
+* Scale the Guard-Learner service to continuesly run a single instance using  `--min 1 --max 1`
+* You need to create the Guard-Learner service only once per code-engine project.
 
-## Creating and deploying an application
+## Creating and deploying a protected unexposed helloeworld application
 {: #guard-deploy-app}
 {: step}
 
-- Create your application and give it a project visibility. It in this tutorial you will use the helloworld image as shown in [**`ibmcloud ce application create`**](/docs/codeengine?topic=codeengine-cli#cli-application-create) command. 
-- In the following example, you may change the service name and set a different image and port.
+- Create the helloworld application and give it a project visibility. 
+- In the following example, you may change the application name and set a different image and port.
 
     ```txt
     export SERVICE_NAME="myapp"
@@ -89,15 +94,16 @@ Notes:
     [...]
     Run 'ibmcloud ce application get -n myapp' to check the application status.
     OK
+    
     http://myapp.p8rrxs4rezl.svc.cluster.local
     ```
     {: screen}
     
 Notes:
-* Ensure to protect your service and not expose it to potential offenders by using project level visibility using `-v project`
+* Ensure to protect your service and not expose it to potential offenders by setting project level visibility using `-v project`
 * It is advised (but not mandatory) to set the minimum scale to a single instance using  `--min 1`
 
-## Finding the Namespace and service URLs 
+## Finding the namespace and service URLs 
 {: #guard-get-parameters}
 {: step}
 
@@ -105,7 +111,7 @@ Notes:
 
 ```txt
 export NAMESPACE=`ibmcloud ce project current -o json|jq -r .kube_config_context`
-export GUARD_URL=`ibmcloud ce application get -n guard-learner -o url`
+export LEARNER_URL=`ibmcloud ce application get -n guard-learner -o url`
 export SERVICE_URL=`ibmcloud ce application get -n ${SERVICE_NAME} -o url`
 
 echo "The protected service name '${SERVICE_NAME}' namespace '${NAMESPACE}' url '${SERVICE_URL}'"
@@ -121,11 +127,11 @@ The guard learner url is 'http://guard-learner.p8rrxs4rezl.svc.cluster.local'
 ```
 {: screen}
 
-## Expose your service to the internet via guard
+## Exposing the helloeworld application to the internet via guard
 {: #guard-expose-app}
 {: step}
 
-- Add a guard service to securly expose your application service 
+- Add a helloeworld Guard to securly expose the helloeworld application to the internet 
 
 ```txt
 ibmcloud ce application create -n ${SERVICE_NAME}-guard --min 1 -p 22000 \
@@ -145,33 +151,27 @@ Example output
     [...]
     Run 'ibmcloud ce application get -n myapp-guard' to check the application status.
     OK
+    
     https://myapp-guard.p8rrxs4rezl.us-south.codeengine.appdomain.cloud
     ```
     {: screen}
-    
+
+You may now access the protected helloworld application via the url exposed by helloeworld Guard 
+
+
 Notes:
-* Ensure to provide guard with the protect namespce and the coresponsing service it protects. Each guard service protects a coresponding application service.
-* Ensure to set `USE_CONFIGMAP=true` guard will maintain a config map names `guardian-${SERVICE_NAME}` with the service micro-rules
-* It is advised (but not mandatory) to set the minimum scale to a single instance using  `--min 1`
+* Deploy a Gurd for any application you seek to protect.
+* Ensure to provide Guard with the project namespce and the coresponsing application name and url it protects. 
+* Ensure to provide Guard with the url of the Guard-Learner. 
+* Ensure to set `USE_CONFIGMAP=true` to instruct Guard to maintain the micro-rules in a configmap named `guardian-${SERVICE_NAME}` 
+* It is advised (but not mandatory) to set the minimum scale of Guard to a single instance using  `--min 1`
 
-## Removing this tutorial services
-{: #guard-cleanup}
-{: step}
 
-You can clean up your local system by removing the `Iter8-in-Docker` container and image if you no longer need it.
-
-```txt
-ibmcloud ce application delete -n ${SERVICE_NAME}
-ibmcloud ce application delete -n ${SERVICE_NAME}-guard
-ibmcloud ce application delete -n guard-learner
-```
-{: pre}
-
-## Security Situational Awareness
+## Managing the security of the helloeworld application and gaining Situational Awareness
 {: #guard-situational-awareness}
 {: step}
 
-Guard offers situational awarenss into the service security posture.
+Guard offers situational awarenss into the application security posture.
 You may see Security Alerts in the log file of guard.
 
 ```txt
@@ -187,11 +187,31 @@ Example output
     [...]
     ```
     {: screen}
-    
-Notes:
-* Security Alerts appear as warnings in the log file and start with teh string "SECURITY ALERT!"
-* The default setup of Guard is to never block any request and to auto-learn the requests within ~5 minuetes. Consequently, it takes about 30 min for guard to learn the charactaristics of the incoming requests and build coresponding micro-rulkes. 
-* After the initial learning period, Guard wil alert only when a change in behaviour is detedted. 
-* Note that in the default mode of operation, Guard continues to learn any new behaviour, correct security procedures should incldue reviewing any new behaviour detected by Guard. 
-* Guard has additional modes of operations that enable setting manual micro-rules and/or blocking requetss based on micro-rules - contect IBM Code Engine for further details
+
+
+Security Alerts appear as warnings in the log file and start with the string "SECURITY ALERT!". The default setup of Guard is to never block any request and auto-learn any changes in the ingress. It typically takes about 30 min for Guard to learn the charactaristics of the incoming requests and build coresponding micro-rules. After the initial learning period, Guard alerts only when a change in behaviour is detedted. 
+
+Note that in the default setup, Guard continues to learn any new behavior and will therefore avoid reporting when the new behavior repeats.
+Correct security procedures should incldue reviewing any new behavior detected by Guard. 
+
+Guard can also be configrued to operate in other important modes of operation such as:
+
+- Move from auto-learning to manual micro-rules management after the initial learning period
+- Block requests/responses when they do not conform to the micro-rules 
+
+Contact us in the [#code-engine channel](https://ibm-cloud-success.slack.com){: external} for further details. 
+
+## Removing this tutorial applications
+{: #guard-cleanup}
+{: step}
+
+You can clean up your local system by removing the helloeworld application, the helloeworld Guard and the Guard-Learner if you no longer need it.
+
+```txt
+ibmcloud ce application delete -n ${SERVICE_NAME}
+ibmcloud ce application delete -n ${SERVICE_NAME}-guard
+ibmcloud ce application delete -n guard-learner
+```
+{: pre}
+
 
