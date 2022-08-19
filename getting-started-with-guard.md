@@ -4,7 +4,7 @@ copyright:
   years: 2022
 lastupdated: "2022-08-02"
 
-keywords: security, zero trust, runtime security, workload security, workload security, serverless security, Gaurd, code engine application security, code engine Service
+keywords: security, zero trust, runtime security, workload security, situational awareness, serverless security, Guard, code engine application security, code engine security
 
 subcollection: codeengine
 
@@ -27,8 +27,7 @@ In this tutorial we deploy a new helloworld application and protect it with Guar
 
 Before you begin:
 
-- [Set up your {{site.data.keyword.codeengineshort}} CLI environment](/docs/codeengine?topic=codeengine-install-cli).
-- [Create and work with a project](/docs/codeengine?topic=codeengine-manage-project).
+- Make sure that your are able to [Deploy applications using CLI](docs/codeengine?topic=codeengine-deploy-app-tutorial).
 
 All {{site.data.keyword.codeengineshort}} users are required to have a Pay-as-you-Go account. Tutorials might incur costs. Use the Cost Estimator to generate a cost estimate based on your projected usage. For more information, see [{{site.data.keyword.codeengineshort}} pricing](/docs/codeengine?topic=codeengine-pricing).
 {: note}
