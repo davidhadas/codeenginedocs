@@ -20,7 +20,7 @@ completion-time: 5m
 {: toc-content-type="tutorial"}
 {: toc-completion-time="5m"}
 
-[Guard](http://knative.dev/security-guard){: external} is a runtime-security solution that will be offered as an option in later versions of Knative. Guard uses a per-application auto-learned set of micro-rules to govern the application incoming requests and outgoing responses. As a result, Guard  helps identifiy application anomalies and supports Situational Awareness. Guard can also be used to block requests or responses not in line with expected patterns. 
+Guard is a runtime-security solution now offered to Code Engine users.  [The Open Source Knative Community will also be be offering Guard](http://knative.dev/security-guard){: external} in later versions. Guard uses a per-application auto-learned set of micro-rules to govern the application incoming requests and outgoing responses. As a result, Guard  helps identifiy application anomalies and supports Situational Awareness. Guard can also be used to block requests or responses not in line with expected patterns. 
 {: shortdesc}
 
 In this tutorial we deploy a new helloworld application and protect it with Guard. The steps to protect your own applications are similar.
