@@ -15,7 +15,7 @@ completion-time: 5m
 
 {{site.data.keyword.attribute-definition-list}}
 
-# Securing your application with Guard
+# Controlling Guard micro-rules using Guard-ui
 {: #runtimesecuritytut}
 {: toc-content-type="tutorial"}
 {: toc-completion-time="5m"}
@@ -148,17 +148,28 @@ Notes:
 
 Using your browser browse to the url: `http://127.0.0.1:9000/`
 1. Type in the <SERVICE_NAME> and press the `Get` button
-2. Under `Control` you can select:
-  - The `Alert Control` which allows you choose between:
-    - `No Alerts`: get no alerts
-    - `Manual Alert`: get alerts based on the manual configuration
-    - `Auto Alert`: get alerts based on the auto-learning (the default in Code Engine)
-  - The `Learning Control` which allows you choose between:
-    - `Disable`: Stop learning new samples.
-    - `Enable`: Learn new samples only if they are not producing alerts
-    - `Force`: Learn new samples even if they are producing alerts
-  - The `Block Control`
-    - `Disable`: Never block requests and responses
-    - `Enable`: Block requests and responses if alert is identified
+2. Buttens:
+  - `Load`: load a guardian from a file in the workstation file system
+  - `Save`: save the current guardian to a file in the workstation file system
+  - `Default`: create a default (empty) guardian
+  - `Learned`: copy the `Learnd>` micro-rules to the `Configured` in the current guardian
+  - `Get`: Get the guardian Configmap named `guardian-<Service Name>` in the current `Namespace` from Kube API
+  - `Set`: Set the current guardian to a Configmap named `guardian-<Service Name>` of the current `Namespace` using Kube API
+4. Under `Control` you can select:
+  - The `Control>Alert Control` which allows you choose between:
+    - `Control>Alert Control>No Alerts`: get no alerts
+    - `Control>Alert Control>Manual Alert`: get alerts based on the manual configuration
+    - `Control>Alert Control>Auto Alert`: get alerts based on the auto-learning (the default in Code Engine)
+  - The `Control>Learning Control` which allows you choose between:
+    - `Control>Learning Control>Disable`: Stop learning new samples.
+    - `Control>Learning Control>Enable`: Learn new samples only if they are not producing alerts
+    - `Control>Learning Control>Force`: Learn new samples even if they are producing alerts
+  - The `Control>Block Control`
+    - `Control>Block Control>Disable`: Never block requests and responses
+    - `Control>Block Control>Enable`: Block requests and responses if alert is identified
+5. Under `Configured` you can find configrable micro-rules that you may manually set
+  - `Control>Alert Control>Manual Alert` need to be chosen for the manual configuration to be used
+  - `Configured>Active` need to be pressed for the manual configuration to be used
+ 
     
 
