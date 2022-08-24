@@ -147,29 +147,41 @@ Notes:
 {: step}
 
 Using your browser browse to the url: `http://127.0.0.1:9000/`
+
 1. Type in the <SERVICE_NAME> and press the `Get` button
-2. Buttens:
+
+<img src="images/guard-ui-get.png" width="600"/>
+
+2. Buttens in the main menue:
   - `Load`: load a guardian from a file in the workstation file system
   - `Save`: save the current guardian to a file in the workstation file system
   - `Default`: create a default (empty) guardian
   - `Learned`: copy the `Learnd>` micro-rules to the `Configured` in the current guardian
   - `Get`: Get the guardian Configmap named `guardian-<Service Name>` in the current `Namespace` from Kube API
   - `Set`: Set the current guardian to a Configmap named `guardian-<Service Name>` of the current `Namespace` using Kube API
-4. Under `Control` you can select:
-  - The `Control>Alert Control` which allows you choose between:
+
+
+
+
+3. Under ***Control*** you can select:
+  - Using the Alert Control menu:
     - `Control>Alert Control>No Alerts`: get no alerts
     - `Control>Alert Control>Manual Alert`: get alerts based on the manual configuration
     - `Control>Alert Control>Auto Alert`: get alerts based on the auto-learning (the default in Code Engine)
-  - The `Control>Learning Control` which allows you choose between:
+  - Using the Learning Control menu:
     - `Control>Learning Control>Disable`: Stop learning new samples.
     - `Control>Learning Control>Enable`: Learn new samples only if they are not producing alerts
     - `Control>Learning Control>Force`: Learn new samples even if they are producing alerts
-  - The `Control>Block Control`
+  - Using the Block Control menu:
     - `Control>Block Control>Disable`: Never block requests and responses
     - `Control>Block Control>Enable`: Block requests and responses if alert is identified
-5. Under `Configured` you can find configrable micro-rules that you may manually set
-  - `Control>Alert Control>Manual Alert` need to be chosen for the manual configuration to be used
-  - `Configured>Active` need to be pressed for the manual configuration to be used
- 
-    
+
+<img src="images/guard-ui.png" width="600"/>
+
+4. Under ***Configured*** you can find configrable micro-rules that you may manually set
+  - First set the ***Control*** to use `Control>Alert Control>Manual Alert` for the manual configuration to be used
+  - Then set the `Configured>Active` button to green for the manual configuration to be active
+  - Now set the micro-rules manualy as shown below. 
+  - It is recommended to copy the learned micro-rules before starting to edir the manual micro-rules by pressing the `Learned` button at the main menu.
+    <img src="images/guard-ui-manual.png" width="600"/>
 
