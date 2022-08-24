@@ -142,7 +142,7 @@ Notes:
 * When the login expires, repeat the process to renew your login credentials 
 
 
-## Browse to the local guard-ui guardian management app that your deployed
+## Browse to the local guard-ui Guardian management app that your deployed
 {: #guard-browse to guard-ui}
 {: step}
 
@@ -153,12 +153,12 @@ Using your browser browse to the url: `http://127.0.0.1:9000/`
 <img src="images/guard-ui-get.png" width="600"/>
 
 2. Buttens in the main menue:
-  - `Load`: load a guardian from a file in the workstation file system
-  - `Save`: save the current guardian to a file in the workstation file system
-  - `Default`: create a default (empty) guardian
-  - `Learned`: copy the `Learnd>` micro-rules to the `Configured` in the current guardian
-  - `Get`: Get the guardian Configmap named `guardian-<Service Name>` in the current `Namespace` from Kube API
-  - `Set`: Set the current guardian to a Configmap named `guardian-<Service Name>` of the current `Namespace` using Kube API
+  - `Load`: load a Guardian from a file in the workstation file system
+  - `Save`: save the current Guardian to a file in the workstation file system
+  - `Default`: create a default (empty) Guardian
+  - `Learned`: copy the `Learnd>` micro-rules to the `Configured` in the current Guardian
+  - `Get`: Get the Guardian Configmap named `guardian-<Service Name>` in the current `Namespace` from Kube API
+  - `Set`: Set the current Guardian to a Configmap named `guardian-<Service Name>` of the current `Namespace` using Kube API
 
 
 
@@ -183,5 +183,8 @@ Using your browser browse to the url: `http://127.0.0.1:9000/`
   - Then set the `Configured>Active` button to green for the manual configuration to be active
   - Now set the micro-rules manualy as shown below. 
   - It is recommended to copy the learned micro-rules before starting to edir the manual micro-rules by pressing the `Learned` button at the main menu.
-    <img src="images/guard-ui-manual.png" width="600"/>
+  - When you finish editing the micro-rules, press the `Set` button to set the Guardian Configmap
+  - Changes to the Guardian Configmap will be auto-reloaded periodically by instances of Guard 
+
+<img src="images/guard-ui-manual.png" width="600"/>
 
